@@ -1,5 +1,6 @@
 package com.wheel.wheelhouse.repository;
 
+import com.wheel.wheelhouse.dto.UserDto;
 import com.wheel.wheelhouse.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

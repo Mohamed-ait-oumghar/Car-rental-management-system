@@ -34,21 +34,16 @@ public class UserController {
 
     // Get all users with pagination
     @GetMapping
-    public ResponseEntity<Page<User>> getAllUsers(
+    public ResponseEntity<Page<UserDto>> getAllUsers(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "userId") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDirection) {
-
-        Sort sort = sortDirection.equalsIgnoreCase("desc")
-                ? Sort.by(sortBy).descending()
-                : Sort.by(sortBy).ascending();
-
-        Pageable pageable = PageRequest.of(page, size, sort);
-        Page<User> users = userService.getAllUsers(pageable);
+            @RequestParam(defaultValue = "10") int size)
+    {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<UserDto> users = userService.getAllUsers(pageable);
 
         return ResponseEntity.ok(users);
     }
+
 
     // Get by ID
     @GetMapping("/{id}")

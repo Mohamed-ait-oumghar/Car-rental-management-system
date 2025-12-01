@@ -1,5 +1,6 @@
 package com.wheel.wheelhouse.controller;
 
+import com.wheel.wheelhouse.dto.ClientDto;
 import com.wheel.wheelhouse.dto.OrderDto;
 import com.wheel.wheelhouse.entity.Order;
 import com.wheel.wheelhouse.service.OrderService;
@@ -31,18 +32,12 @@ public class OrderController {
 
     // Get all orders with pagination
     @GetMapping
-    public ResponseEntity<Page<Order>> getAllOrders(
+    public ResponseEntity<Page<OrderDto>> getAllOrders(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "orderId") String sortBy,
-            @RequestParam(defaultValue = "desc") String sortDirection) {
-
-        Sort sort = sortDirection.equalsIgnoreCase("desc")
-                ? Sort.by(sortBy).descending()
-                : Sort.by(sortBy).ascending();
-
-        Pageable pageable = PageRequest.of(page, size, sort);
-        Page<Order> orders = orderService.getAllProducts(pageable);
+            @RequestParam(defaultValue = "10") int size)
+    {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<OrderDto> orders = orderService.getAllOrders(pageable);
 
         return ResponseEntity.ok(orders);
     }

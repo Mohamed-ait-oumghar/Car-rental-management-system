@@ -52,10 +52,17 @@ public class UserService {
         return userRepository.save(user);
     }
 
+
+
     //Pagination
-    public Page<User> getAllUsers(Pageable pageable) {
-        return userRepository.findAll(pageable);
+    public Page<UserDto> getAllUsers(Pageable pageable) {
+
+        Page<User> usersPage = userRepository.findAll(pageable);
+
+        return usersPage.map(UserMapper::toDto);
     }
+
+
     //Get users by Ids
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);

@@ -1,8 +1,12 @@
 package com.wheel.wheelhouse.controller;
 
 import com.wheel.wheelhouse.dto.CarDto;
+import com.wheel.wheelhouse.dto.RoleDto;
 import com.wheel.wheelhouse.entity.Car;
 import com.wheel.wheelhouse.service.CarService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +29,18 @@ public class CarController {
     public ResponseEntity<Car> createCar(@Valid @RequestBody CarDto carDto) {
         Car createdCar = carService.createCar(carDto);
         return new ResponseEntity<>(createdCar, HttpStatus.CREATED);
+    }
+
+    // Get all Cars with pagination
+    @GetMapping
+    public ResponseEntity<Page<CarDto>> getAllRoles(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size)
+    {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CarDto> cars = carService.getAllCars(pageable);
+
+        return ResponseEntity.ok(cars);
     }
 
 

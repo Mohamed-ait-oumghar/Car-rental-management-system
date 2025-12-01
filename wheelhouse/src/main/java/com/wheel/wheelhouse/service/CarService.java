@@ -2,8 +2,11 @@ package com.wheel.wheelhouse.service;
 
 import com.wheel.wheelhouse.customException.CarDeletionException;
 import com.wheel.wheelhouse.dto.CarDto;
+import com.wheel.wheelhouse.dto.UserDto;
 import com.wheel.wheelhouse.entity.Car;
+import com.wheel.wheelhouse.entity.User;
 import com.wheel.wheelhouse.mapper.CarMapper;
+import com.wheel.wheelhouse.mapper.UserMapper;
 import com.wheel.wheelhouse.repository.CarRepository;
 import com.wheel.wheelhouse.repository.OrderRepository;
 import org.springframework.data.domain.Page;
@@ -40,6 +43,16 @@ public class CarService {
 
         return carRepository.save(car);
     }
+
+    //Pagination
+    public Page<CarDto> getAllCars(Pageable pageable) {
+
+        Page<Car> carsPage = carRepository.findAll(pageable);
+
+        return carsPage.map(CarMapper::toDto);
+    }
+
+
     //Get mark
     public Optional<Car> findByMark(String mark) {
         return carRepository.findByMark(mark);

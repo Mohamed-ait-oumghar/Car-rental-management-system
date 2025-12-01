@@ -1,8 +1,12 @@
 package com.wheel.wheelhouse.controller;
 
 import com.wheel.wheelhouse.dto.ClientDto;
+import com.wheel.wheelhouse.dto.UserDto;
 import com.wheel.wheelhouse.entity.Client;
 import com.wheel.wheelhouse.service.ClientService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -63,6 +67,18 @@ public class ClientController {
             @Valid @RequestBody ClientDto clientDto) {
         ClientDto updatedClient = clientService.updateClient(cin, clientDto);
         return ResponseEntity.ok(updatedClient);
+    }
+
+    // Get all clients with pagination
+    @GetMapping
+    public ResponseEntity<Page<ClientDto>> getAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size)
+    {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ClientDto> clients = clientService.getAllClients(pageable);
+
+        return ResponseEntity.ok(clients);
     }
 
     // Delete client

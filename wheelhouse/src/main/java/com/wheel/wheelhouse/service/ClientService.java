@@ -1,8 +1,11 @@
 package com.wheel.wheelhouse.service;
 
 import com.wheel.wheelhouse.customException.ClientDeletionException;
+import com.wheel.wheelhouse.dto.CarDto;
 import com.wheel.wheelhouse.dto.ClientDto;
+import com.wheel.wheelhouse.entity.Car;
 import com.wheel.wheelhouse.entity.Client;
+import com.wheel.wheelhouse.mapper.CarMapper;
 import com.wheel.wheelhouse.mapper.ClientMapper;
 import com.wheel.wheelhouse.repository.ClientRepository;
 import com.wheel.wheelhouse.repository.OrderRepository;
@@ -59,6 +62,14 @@ public class ClientService {
     //Get client by CIN
     public Optional<Client> getByCin(String cin) {
         return clientRepository.findByCin(cin);
+    }
+
+    //Pagination
+    public Page<ClientDto> getAllClients(Pageable pageable) {
+
+        Page<Client> clientsPage = clientRepository.findAll(pageable);
+
+        return clientsPage.map(ClientMapper::toDto);
     }
 
     //update client

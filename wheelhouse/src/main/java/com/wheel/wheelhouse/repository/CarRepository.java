@@ -1,6 +1,7 @@
 package com.wheel.wheelhouse.repository;
 
 import com.wheel.wheelhouse.entity.Car;
+import com.wheel.wheelhouse.entity.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,5 +17,7 @@ public interface CarRepository extends JpaRepository<Car,Long> {
     Optional<Car> findById(Long id);
     Optional<Car> findByModule(String module);
     Optional<Car> findByPlateNumber(String plateNumber);
+
+    Page<Car> findAll(Pageable pageable);
 
 }

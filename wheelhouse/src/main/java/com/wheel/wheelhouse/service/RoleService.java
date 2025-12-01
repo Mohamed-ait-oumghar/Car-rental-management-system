@@ -1,7 +1,12 @@
 package com.wheel.wheelhouse.service;
 
+import com.wheel.wheelhouse.dto.RoleDto;
+import com.wheel.wheelhouse.dto.UserDto;
 import com.wheel.wheelhouse.entity.Role;
 
+import com.wheel.wheelhouse.entity.User;
+import com.wheel.wheelhouse.mapper.RoleMapper;
+import com.wheel.wheelhouse.mapper.UserMapper;
 import com.wheel.wheelhouse.repository.RoleRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,8 +30,11 @@ public class RoleService {
     }
 
     //Pagination
-    public Page<Role> getAllRoles(Pageable pageable) {
-        return roleRepository.findAll(pageable);
+    public Page<RoleDto> getAllRoles(Pageable pageable) {
+
+        Page<Role> rolesPage = roleRepository.findAll(pageable);
+
+        return rolesPage.map(RoleMapper::toDto);
     }
 
     // find by name

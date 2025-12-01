@@ -1,5 +1,6 @@
 package com.wheel.wheelhouse.repository;
 
+import com.wheel.wheelhouse.entity.Car;
 import com.wheel.wheelhouse.entity.Client;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,4 +18,5 @@ public interface ClientRepository extends JpaRepository<Client,Long> {
     Optional<Client> findByPhoneNumber(String phoneNumber);
     Optional<Client> findByCin(String cin);
 
+    Page<Client> findAll(Pageable pageable);
 }

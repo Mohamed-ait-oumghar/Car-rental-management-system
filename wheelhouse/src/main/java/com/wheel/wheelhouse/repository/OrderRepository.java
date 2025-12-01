@@ -1,5 +1,6 @@
 package com.wheel.wheelhouse.repository;
 
+import com.wheel.wheelhouse.entity.Client;
 import com.wheel.wheelhouse.entity.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,5 +21,7 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     boolean existsByUser_UserId(Long userId);
 
     boolean existsByCar_CarId(Long carId);
+
+    Page<Order> findAll(Pageable pageable);
 
 }

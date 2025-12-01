@@ -1,10 +1,12 @@
 package com.wheel.wheelhouse.service;
 
+import com.wheel.wheelhouse.dto.ClientDto;
 import com.wheel.wheelhouse.dto.OrderDto;
 import com.wheel.wheelhouse.entity.Car;
 import com.wheel.wheelhouse.entity.Client;
 import com.wheel.wheelhouse.entity.Order;
 import com.wheel.wheelhouse.entity.User;
+import com.wheel.wheelhouse.mapper.ClientMapper;
 import com.wheel.wheelhouse.mapper.OrderMapper;
 import com.wheel.wheelhouse.repository.CarRepository;
 import com.wheel.wheelhouse.repository.ClientRepository;
@@ -75,8 +77,11 @@ public class OrderService {
     }
 
     //Pagination
-    public Page<Order> getAllProducts(Pageable pageable) {
-        return orderRepository.findAll(pageable);
+    public Page<OrderDto> getAllOrders(Pageable pageable) {
+
+        Page<Order> ordersPage = orderRepository.findAll(pageable);
+
+        return ordersPage.map(OrderMapper::toDto);
     }
 
     //Update all attribute except clientId, Creation date
