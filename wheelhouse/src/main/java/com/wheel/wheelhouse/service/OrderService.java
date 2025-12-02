@@ -36,7 +36,6 @@ import java.util.List;
             //Create order
             Order order = new Order();
 
-            // Set relations
             Client client = clientRepository.findById(orderDto.getClientId())
                     .orElseThrow(() -> new RuntimeException("Client not found"));
             order.setClient(client);
@@ -48,7 +47,7 @@ import java.util.List;
             Car car = carRepository.findById(orderDto.getCarId())
                     .orElseThrow(() -> new RuntimeException("Car not found"));
 
-            //
+
             List<Order> orderList = orderRepository.findByCar_CarId(car.getCarId());
 
             for (Order s : orderList) {
