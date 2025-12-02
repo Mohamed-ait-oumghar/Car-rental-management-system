@@ -51,10 +51,9 @@ import java.util.List;
             List<Order> orderList = orderRepository.findByCar_CarId(car.getCarId());
 
             for (Order s : orderList) {
-                if (orderDto.getEndDate().isBefore(s.getDebutDate()) ||
-                        orderDto.getDebutDate().isAfter(s.getEndDate())) {
+                if (!(orderDto.getEndDate().isBefore(s.getDebutDate()) || orderDto.getDebutDate().isAfter(s.getEndDate()))) {
+                    throw new RuntimeException("Car already rented during these dates.");
                 }
-                throw new RuntimeException("Car already rented during these dates.");
             }
 
             order.setDebutDate(orderDto.getDebutDate());
@@ -70,11 +69,6 @@ import java.util.List;
             return OrderMapper.toDto(saved);
         }
 
-
-        //get All orders
-        public List<Order> getAllOrders() {
-            return orderRepository.findAll();
-        }
         //get CreationDate
         public List<Order> getByCreationDate(LocalDate creationDate) {
             return orderRepository.findByCreationDate(creationDate);
