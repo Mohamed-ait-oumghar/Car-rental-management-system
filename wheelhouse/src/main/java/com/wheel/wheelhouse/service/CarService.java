@@ -2,11 +2,8 @@ package com.wheel.wheelhouse.service;
 
 import com.wheel.wheelhouse.customException.CarDeletionException;
 import com.wheel.wheelhouse.dto.CarDto;
-import com.wheel.wheelhouse.dto.UserDto;
 import com.wheel.wheelhouse.entity.Car;
-import com.wheel.wheelhouse.entity.User;
 import com.wheel.wheelhouse.mapper.CarMapper;
-import com.wheel.wheelhouse.mapper.UserMapper;
 import com.wheel.wheelhouse.repository.CarRepository;
 import com.wheel.wheelhouse.repository.OrderRepository;
 import org.springframework.data.domain.Page;

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order,Long> {
@@ -21,6 +22,8 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     boolean existsByUser_UserId(Long userId);
 
     boolean existsByCar_CarId(Long carId);
+
+    List<Order> findByCar_CarId(Long carId);
 
     Page<Order> findAll(Pageable pageable);
 

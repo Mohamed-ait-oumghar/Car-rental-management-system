@@ -14,12 +14,18 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class OrderDto {
 
+
+
     @NotNull(message = "Debut date shouldn't be null")
     @FutureOrPresent(message = "Debut date must be in the present or future.")
     private LocalDate debutDate;
 
     @NotNull(message = "End date shouldn't be null")
-    @Future(message = "End date must be in the future.")
+    @AssertTrue(message = "End date must be after start date")
+    public boolean isValidDates() {
+        if (debutDate == null || endDate == null) return true;
+        return endDate.isAfter(debutDate);
+    }
     private LocalDate endDate;
 
     @NotBlank(message = "Debut location shouldn't be null")
@@ -32,7 +38,7 @@ public class OrderDto {
     @Positive(message = "Price must be positive, Zero is considered as invalid value!")
     private Integer totalPrice;
 
-    @FutureOrPresent(message = "Creation date must be today or in the past")
+    @FutureOrPresent(message = "Creation date must be today or in the future")
     private LocalDate creationDate;
 
 

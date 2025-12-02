@@ -25,10 +25,11 @@ public class OrderController {
 
     // Create an Order
     @PostMapping
-    public ResponseEntity<Order> createOrder(@Valid @RequestBody OrderDto orderDto) {
-        Order createdOrder = orderService.createOrder(orderDto);
+    public ResponseEntity<OrderDto> createOrder(@Valid @RequestBody OrderDto orderDto) {
+        OrderDto createdOrder = orderService.createOrder(orderDto);
         return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
     }
+
 
     // Get all orders with pagination
     @GetMapping
