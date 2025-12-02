@@ -9,8 +9,10 @@ import com.wheel.wheelhouse.repository.OrderRepository;
 import com.wheel.wheelhouse.repository.RoleRepository;
 import com.wheel.wheelhouse.repository.UserRepository;
 
+import com.wheel.wheelhouse.security.SecurityConfig;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -21,19 +23,20 @@ public class UserService {
      UserRepository userRepository;
      RoleRepository roleRepository;
      OrderRepository orderRepository;
+     PasswordEncoder passwordEncoder;
 
-
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, OrderRepository orderRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, OrderRepository orderRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.orderRepository = orderRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // Create user with role names
     public User createUser(UserDto dto) {
         User user = new User();
         user.setUserName(dto.getUserName());
-        user.setPassword(dto.getPassword());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setEmail(dto.getEmail());
 
         if (dto.getRolesName() != null && !dto.getRolesName().isEmpty()) {
@@ -51,7 +54,6 @@ public class UserService {
         }
         return userRepository.save(user);
     }
-
 
 
     //Pagination
@@ -74,17 +76,21 @@ public class UserService {
     }
 
     //Update user (email, password, roles)
-    public UserDto updateUser(String userName, UserDto updateUser) {
+    public UserDto updateUser(Long id, UserDto updateUser) {
 
-        User existingUser = userRepository.findByUserName(userName)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userName));
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+
+        if (updateUser.getUserName() != null) {
+            existingUser.setUserName(updateUser.getUserName());
+        }
 
         if (updateUser.getEmail() != null) {
             existingUser.setEmail(updateUser.getEmail());
         }
 
         if (updateUser.getPassword() != null && !updateUser.getPassword().isEmpty()) {
-            existingUser.setPassword(updateUser.getPassword());
+            existingUser.setPassword(passwordEncoder.encode(updateUser.getPassword()));
         }
 
         if (updateUser.getRolesName() != null) {

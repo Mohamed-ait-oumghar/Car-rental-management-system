@@ -61,9 +61,9 @@ public class UserController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
     // Update user by username
-    @PutMapping("/{userName}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable String userName, @Valid @RequestBody UserDto updateUser) {
-        UserDto updatedUser = userService.updateUser(userName, updateUser);
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @Valid @RequestBody UserDto updateUser) {
+        UserDto updatedUser = userService.updateUser(id, updateUser);
         return ResponseEntity.ok(updatedUser);
     }
 
