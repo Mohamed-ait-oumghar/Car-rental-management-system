@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -38,13 +39,19 @@ public class AuthController {
                             request.getPassword()
                     )
             );
+
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            // Pass username string to generateToken
-            String token = jwtUtils.generateToken(request.getUserName());
+
+            List<String> roles = authentication.getAuthorities().stream()
+                    .map(a -> a.getAuthority())
+                    .toList();
+
+            String token = jwtUtils.generateToken(request.getUserName(), roles);
             return ResponseEntity.ok(Map.of(
                     "token", token,
                     "type", "Bearer",
-                    "username", request.getUserName()
+                    "username", request.getUserName(),
+                    "roles", roles
             ));
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
