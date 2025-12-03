@@ -9,16 +9,21 @@ import com.wheel.wheelhouse.repository.OrderRepository;
 import com.wheel.wheelhouse.repository.RoleRepository;
 import com.wheel.wheelhouse.repository.UserRepository;
 
-import com.wheel.wheelhouse.security.SecurityConfig;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService{
 
      UserRepository userRepository;
      RoleRepository roleRepository;
@@ -32,6 +37,22 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    //Add loadUserByUsername to user service
+    @Override
+    public UserDetails loadUserByUsername(String username) {
+        User user = userRepository.findByUserName(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        // Convert Set<Role> to authorities
+        Set<GrantedAuthority> authorities = user.getRoles().stream()
+                .map(Role::getRoleName) // Extract role name from Role entity
+                .map(SimpleGrantedAuthority::new) // Convert to authority
+                .collect(Collectors.toSet());
+        return new org.springframework.security.core.userdetails.User(
+                user.getUserName(),
+                user.getPassword(),
+                authorities
+        );
+    }
     // Create user with role names
     public User createUser(UserDto dto) {
         User user = new User();
@@ -54,8 +75,6 @@ public class UserService {
         }
         return userRepository.save(user);
     }
-
-
     //Pagination
     public Page<UserDto> getAllUsers(Pageable pageable) {
 
@@ -63,18 +82,14 @@ public class UserService {
 
         return usersPage.map(UserMapper::toDto);
     }
-
-
     //Get users by Ids
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
     }
-
     //Get  users by email
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
-
     //Update user (email, password, roles)
     public UserDto updateUser(Long id, UserDto updateUser) {
 
@@ -106,7 +121,6 @@ public class UserService {
         User saved = userRepository.save(existingUser);
         return UserMapper.toDto(saved);
     }
-
     //delete
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
