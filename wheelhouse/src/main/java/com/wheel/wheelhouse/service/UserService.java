@@ -31,7 +31,6 @@ public class UserService {
         this.orderRepository = orderRepository;
         this.passwordEncoder = passwordEncoder;
     }
-
     // Create user with role names
     public User createUser(UserDto dto) {
         User user = new User();

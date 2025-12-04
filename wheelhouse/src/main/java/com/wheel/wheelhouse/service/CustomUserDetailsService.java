@@ -57,11 +57,13 @@ public class CustomUserDetailsService implements UserDetailsService {
         user.setUserName(username);
         user.setPassword(passwordEncoder.encode(rawPassword));
 
-        Set<Role> assignedRoles = rolesName.stream()
-                .map(roleName -> roleRepository.findByRoleName(roleName)
-                        .orElseThrow(() -> new RuntimeException("Role '" + roleName + "' not found")))
-                .collect(Collectors.toSet());
-        user.setRoles(assignedRoles);
+        if (rolesName != null && !rolesName.isEmpty()) {
+            Set<Role> roles = rolesName.stream()
+                    .map(roleName -> roleRepository.findByRoleName(roleName)
+                            .orElseThrow(() -> new RuntimeException("Role not found: " + roleName)))
+                    .collect(Collectors.toSet());
+            user.setRoles(roles);
+        }
 
         return userRepository.save(user);
     }

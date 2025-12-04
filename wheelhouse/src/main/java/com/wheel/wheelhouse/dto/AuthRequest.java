@@ -1,6 +1,5 @@
 package com.wheel.wheelhouse.dto;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -23,7 +22,7 @@ public class AuthRequest {
     @NotBlank(message = "Password cannot be blank")
     private String password;
 
-    @NotEmpty(message = "User must have at least one role")
+//    @NotEmpty(message = "User must have at least one role")
     private Set<String> rolesName = new HashSet<>();
 
 
