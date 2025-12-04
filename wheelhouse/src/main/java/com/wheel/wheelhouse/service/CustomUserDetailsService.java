@@ -44,7 +44,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         Set<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRoleName()))
                 .collect(Collectors.toSet());
-
         // Return Spring Security UserDetails
         return new org.springframework.security.core.userdetails.User(
                 user.getUserName(),
@@ -66,5 +65,4 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         return userRepository.save(user);
     }
-
 }
