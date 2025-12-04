@@ -35,16 +35,13 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        // Load user from DB
         User user = userRepository.findByUserName(username)
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found with username: " + username));
 
-        // Convert roles into Spring Security authorities
         Set<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRoleName()))
                 .collect(Collectors.toSet());
-        // Return Spring Security UserDetails
         return new org.springframework.security.core.userdetails.User(
                 user.getUserName(),
                 user.getPassword(),
@@ -52,9 +49,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         );
     }
 
-    public User registerNewUser(String username, String rawPassword, Set<String> rolesName) {
+    public User registerNewUserUser(String username, String email, String rawPassword, Set<String> rolesName) {
         User user = new User();
         user.setUserName(username);
+        user.setEmail(email);
         user.setPassword(passwordEncoder.encode(rawPassword));
 
         if (rolesName != null && !rolesName.isEmpty()) {

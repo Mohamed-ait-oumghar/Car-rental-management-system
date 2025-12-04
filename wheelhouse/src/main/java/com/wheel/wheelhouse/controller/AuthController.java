@@ -28,7 +28,6 @@ public class AuthController {
         this.tokenProvider = tokenProvider;
         this.customUserDetailsService = customUserDetailsService;
     }
-
     @PostMapping("/login")
     public AuthResponse login(@Valid @RequestBody AuthRequest request) {
         Authentication authentication = authenticationManager.authenticate(
@@ -42,12 +41,12 @@ public class AuthController {
     @PostMapping("/register")
     public String register(@Valid @RequestBody AuthRequest request) {
 
-        customUserDetailsService.registerNewUser(
+        customUserDetailsService.registerNewUserUser(
                 request.getUserName(),
+                request.getEmail(),
                 request.getPassword(),
                 request.getRolesName()
         );
-
         return "User registered successfully!";
     }
 
