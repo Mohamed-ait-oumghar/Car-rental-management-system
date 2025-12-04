@@ -53,23 +53,18 @@ public class CustomUserDetailsService implements UserDetailsService {
         );
     }
 
-    /**
-     * Creates a new user with an encoded password and assigned role.
-     */
-    public User registerNewUser(String username, String rawPassword, String roleName) {
-
-        // Create entity
+    public User registerNewUser(String username, String rawPassword, Set<String> rolesName) {
         User user = new User();
-        user.setUserName(username);   // <-- FIXED
+        user.setUserName(username);
         user.setPassword(passwordEncoder.encode(rawPassword));
 
-        // Assign role
-        Role role = roleRepository.findByRoleName(roleName)
-                .orElseThrow(() -> new RuntimeException("Role '" + roleName + "' not found"));
+        Set<Role> assignedRoles = rolesName.stream()
+                .map(roleName -> roleRepository.findByRoleName(roleName)
+                        .orElseThrow(() -> new RuntimeException("Role '" + roleName + "' not found")))
+                .collect(Collectors.toSet());
+        user.setRoles(assignedRoles);
 
-        user.setRoles(Set.of(role));
-
-        // Save user
         return userRepository.save(user);
     }
+
 }

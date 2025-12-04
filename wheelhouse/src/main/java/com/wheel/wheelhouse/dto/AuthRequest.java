@@ -2,25 +2,29 @@ package com.wheel.wheelhouse.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @Setter
-@NoArgsConstructor // Required by JSON deserialization (e.g., Spring's @RequestBody)
-@AllArgsConstructor // REQUIRED for the test initialization: new AuthRequest(email, password)
+@NoArgsConstructor
+@AllArgsConstructor
 public class AuthRequest {
 
-    @NotBlank(message = "Email cannot be blank")
-    @Email(message = "Email should be valid")
+    @NotBlank(message = "Username cannot be blank")
     private String userName;
 
     @NotBlank(message = "Password cannot be blank")
     private String password;
 
-    @NotBlank(message = "RoleName cannot be blank")
-    private String RoleName;
+    @NotEmpty(message = "User must have at least one role")
+    private Set<String> rolesName = new HashSet<>();
+
 
 }
