@@ -11,11 +11,6 @@ import com.wheel.wheelhouse.repository.UserRepository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +18,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService implements UserDetailsService{
+public class UserService {
 
      UserRepository userRepository;
      RoleRepository roleRepository;
@@ -37,22 +32,6 @@ public class UserService implements UserDetailsService{
         this.passwordEncoder = passwordEncoder;
     }
 
-    //Add loadUserByUsername to user service
-    @Override
-    public UserDetails loadUserByUsername(String username) {
-        User user = userRepository.findByUserName(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        // Convert Set<Role> to authorities
-        Set<GrantedAuthority> authorities = user.getRoles().stream()
-                .map(Role::getRoleName) // Extract role name from Role entity
-                .map(SimpleGrantedAuthority::new) // Convert to authority
-                .collect(Collectors.toSet());
-        return new org.springframework.security.core.userdetails.User(
-                user.getUserName(),
-                user.getPassword(),
-                authorities
-        );
-    }
     // Create user with role names
     public User createUser(UserDto dto) {
         User user = new User();

@@ -1,60 +1,70 @@
 package com.wheel.wheelhouse.controller;
 
-import com.wheel.wheelhouse.dto.UserDto;
-import com.wheel.wheelhouse.securityconfig.JwtUtils;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.wheel.wheelhouse.dto.AuthRequest;
+import com.wheel.wheelhouse.dto.AuthResponse;
+import com.wheel.wheelhouse.securityconfig.JwtTokenProvider;
+import com.wheel.wheelhouse.service.CustomUserDetailsService;
+
+import jakarta.validation.Valid;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
-    private final JwtUtils jwtUtils;
+    private final JwtTokenProvider tokenProvider;
+    private final CustomUserDetailsService customUserDetailsService;
 
-
-    public AuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
+    public AuthController(AuthenticationManager authenticationManager,
+                          JwtTokenProvider tokenProvider,
+                          CustomUserDetailsService customUserDetailsService) {
         this.authenticationManager = authenticationManager;
-        this.jwtUtils = jwtUtils;
+        this.tokenProvider = tokenProvider;
+        this.customUserDetailsService = customUserDetailsService;
     }
 
+
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserDto request) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getUserName(),
-                            request.getPassword()
-                    )
-            );
+    public AuthResponse login(@Valid @RequestBody AuthRequest request) {
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getUserName(),
+                        request.getPassword()
+                )
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            List<String> roles = authentication.getAuthorities().stream()
-                    .map(a -> a.getAuthority())
-                    .toList();
+        String token = tokenProvider.generateToken(authentication.getName());
 
-            String token = jwtUtils.generateToken(request.getUserName(), roles);
-            return ResponseEntity.ok(Map.of(
-                    "token", token,
-                    "type", "Bearer",
-                    "username", request.getUserName(),
-                    "roles", roles
-            ));
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        return new AuthResponse(token);
+    }
+
+
+    @PostMapping("/register")
+    public String register(@Valid @RequestBody AuthRequest request) {
+
+        String role = request.getRoleName();
+
+        if (role == null || role.isBlank()) {
+            throw new IllegalArgumentException("Role is required.");
         }
+
+        if (role.equalsIgnoreCase("ADMIN")) {
+            throw new IllegalArgumentException("You cannot register with ADMIN role.");
+        }
+
+        customUserDetailsService.registerNewUser(
+                request.getUserName(),
+                request.getPassword(),
+                role
+        );
+
+        return "User registered successfully!";
     }
 }
