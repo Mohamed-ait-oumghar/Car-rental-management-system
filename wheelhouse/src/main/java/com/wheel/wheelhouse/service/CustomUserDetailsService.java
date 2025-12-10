@@ -48,7 +48,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                 authorities
         );
     }
-
     public User registerNewUserUser(String username, String email, String rawPassword, Set<String> rolesName) {
         User user = new User();
         user.setUserName(username);
@@ -62,7 +61,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                     .collect(Collectors.toSet());
             user.setRoles(roles);
         }
-
         return userRepository.save(user);
     }
 }

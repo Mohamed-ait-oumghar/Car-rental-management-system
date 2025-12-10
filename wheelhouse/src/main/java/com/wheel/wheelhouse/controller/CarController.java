@@ -23,14 +23,12 @@ public class CarController {
     public CarController(CarService carService) {
         this.carService = carService;
     }
-
     // Create
     @PostMapping
     public ResponseEntity<Car> createCar(@Valid @RequestBody CarDto carDto) {
         Car createdCar = carService.createCar(carDto);
         return new ResponseEntity<>(createdCar, HttpStatus.CREATED);
     }
-
     // Get all Cars with pagination
     @GetMapping
     public ResponseEntity<Page<CarDto>> getAllRoles(
@@ -42,8 +40,6 @@ public class CarController {
 
         return ResponseEntity.ok(cars);
     }
-
-
     // Get by mark
     @GetMapping("/search/mark")
     public ResponseEntity<Car> getCarByMark(@RequestParam String mark) {
@@ -51,7 +47,6 @@ public class CarController {
         return car.map(ResponseEntity::ok)
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-
     // Get by module
     @GetMapping("/search/module")
     public ResponseEntity<Car> getCarByModule(@RequestParam String module) {
@@ -59,7 +54,6 @@ public class CarController {
         return car.map(ResponseEntity::ok)
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-
     // Get by plate number
     @GetMapping("/search/plate-number")
     public ResponseEntity<Car> getCarByPlateNumber(@RequestParam String plateNumber) {
@@ -67,14 +61,12 @@ public class CarController {
         return car.map(ResponseEntity::ok)
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-
     // Update
     @PutMapping("/{plateNumber}")
     public ResponseEntity<CarDto> updateCar(@PathVariable String plateNumber, @Valid @RequestBody CarDto carDto) {
         CarDto updatedCar = carService.updateCar(plateNumber, carDto);
         return ResponseEntity.ok(updatedCar);
     }
-
     // Delete car by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCar(@PathVariable Long id) {

@@ -25,7 +25,7 @@ public class SecurityConfig {
         return config.getAuthenticationManager();
     }
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtFilter) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, HeaderAuthFilter headerAuthFilter) throws Exception {
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -33,7 +33,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(headerAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
