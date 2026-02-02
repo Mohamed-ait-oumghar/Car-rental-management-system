@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/roles")
-public class RoleController {
+public class  RoleController {
 
     private final RoleService roleService;
 
@@ -44,7 +44,7 @@ public class RoleController {
     }
 
     // Get role by name
-    @GetMapping("/search/name")
+    @GetMapping("/search/{roleName}")
     public ResponseEntity<Role> getRoleByName(@PathVariable @RequestParam String roleName) {
         Optional<Role> role = roleService.getRoleByName(roleName);
         return role.map(ResponseEntity::ok)

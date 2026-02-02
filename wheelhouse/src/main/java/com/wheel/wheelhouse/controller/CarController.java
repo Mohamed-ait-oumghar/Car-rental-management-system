@@ -1,7 +1,6 @@
 package com.wheel.wheelhouse.controller;
 
 import com.wheel.wheelhouse.dto.CarDto;
-import com.wheel.wheelhouse.dto.RoleDto;
 import com.wheel.wheelhouse.entity.Car;
 import com.wheel.wheelhouse.service.CarService;
 import org.springframework.data.domain.Page;
@@ -33,7 +32,7 @@ public class CarController {
     @GetMapping
     public ResponseEntity<Page<CarDto>> getAllRoles(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size)
+            @RequestParam(defaultValue = "") int size)
     {
         Pageable pageable = PageRequest.of(page, size);
         Page<CarDto> cars = carService.getAllCars(pageable);
@@ -69,9 +68,9 @@ public class CarController {
     }
     // Delete car by ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCar(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public void deleteCar(@PathVariable Long id) {
         carService.deleteCar(id);
-        return ResponseEntity.ok("Car deleted successfully");
     }
 
 }

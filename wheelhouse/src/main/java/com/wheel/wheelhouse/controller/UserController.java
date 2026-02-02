@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@RestController
+@RestController  //@RestController = @ResponseBody(Tells controller that the object returned is automatically serialized into JSON and passed back into the httpResponse object) + @Controller(we use this annotation to make a java class as a spring boot MVC controller)
 @RequestMapping("/api/users")
 public class UserController {
 
@@ -24,7 +24,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    // Create user
+    // Create user @RequestBody ( Used to bind the body of an HTTP request to a method parameter in a controller convert incoming data from the HTTP request body into a specific Java class instance = Deserialization)
     @PostMapping
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
         User savedUser = userService.createUser(userDto);

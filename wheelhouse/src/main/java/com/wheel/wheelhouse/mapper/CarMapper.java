@@ -12,6 +12,7 @@ public class CarMapper {
         if(car == null) return null;
 
         CarDto carDto = new CarDto();
+        carDto.setCarId(car.getCarId());
         carDto.setPlateNumber(car.getPlateNumber());
         carDto.setMark(car.getMark());
         carDto.setModule(car.getModule());
@@ -30,6 +31,7 @@ public class CarMapper {
         if(carDto == null) return null;
 
         Car car = new Car();
+        car.setCarId(carDto.getCarId());
         car.setPlateNumber(carDto.getPlateNumber());
         car.setMark(carDto.getMark());
         car.setModule(carDto.getModule());

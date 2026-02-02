@@ -19,6 +19,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class CarDto {
 
+    private Long carId;
+
     @NotBlank(message = "Plate number shouldn't be null")
     @Pattern(regexp = "^[A-Z0-9-]{5,15}$", message = "Plate number must be 5-15 alphanumeric characters")
     private String plateNumber;

@@ -96,11 +96,11 @@ public class CarService {
             throw new RuntimeException("Car not found with id: " + id);
         }
 
-        if (orderRepository.existsByCar_CarId(id)) {
-            throw new CarDeletionException(
-                    "Cannot delete car with id " + id + " because it is assigned to one or more orders."
-            );
-        }
+//        if (orderRepository.existsByCar_CarId(id)) {
+//            throw new CarDeletionException(
+//                    "Cannot delete car with id " + id + " because it is assigned to one or more orders."
+//            );
+//        }
         carRepository.deleteById(id);
     }
     

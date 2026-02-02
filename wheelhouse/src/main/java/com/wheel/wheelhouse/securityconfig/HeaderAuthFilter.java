@@ -22,6 +22,12 @@ public class HeaderAuthFilter extends OncePerRequestFilter {
                                     FilterChain chain)
             throws IOException, ServletException {
 
+        // 🔥 VERY IMPORTANT: allow CORS preflight
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
+
         String username = request.getHeader("X-USER");
         String rolesHeader = request.getHeader("X-ROLES");
 

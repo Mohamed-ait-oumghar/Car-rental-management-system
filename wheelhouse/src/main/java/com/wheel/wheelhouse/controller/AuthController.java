@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +34,7 @@ public class AuthController {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         var roles = authentication.getAuthorities().stream()
-                .map(auth -> auth.getAuthority())
+                .map(GrantedAuthority::getAuthority)
                 .toList();
         String token = tokenProvider.generateToken(authentication.getName(), roles);
         return new AuthResponse(token);
